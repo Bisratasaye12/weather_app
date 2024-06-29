@@ -1,19 +1,23 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
+import 'package:weather_app/utils.dart';
 
-class HourlyForcast extends StatelessWidget {
+class HourlyForecast extends StatelessWidget {
   final time;
-  final temprature;
+  String temperature;
   final icon;
 
-  const HourlyForcast(
+  HourlyForecast(
       {super.key,
       required this.time,
-      required this.temprature,
+      required this.temperature,
       required this.icon});
 
   @override
   Widget build(BuildContext context) {
+    final kelvin_to_celsuis = -272.15;
+    temperature =
+        (double.parse(temperature) + kelvin_to_celsuis).toStringAsFixed(0);
     final timeObj = DateTime.parse(time);
     final formatted_time = DateFormat.j().format(timeObj);
     return Card(
@@ -38,16 +42,17 @@ class HourlyForcast extends StatelessWidget {
                 SizedBox(
                   height: 8,
                 ),
-                Icon(
-                  this.icon == 'Clouds' || this.icon == 'Rain'
-                      ? Icons.cloud
-                      : Icons.sunny,
-                  size: 32,
-                ),
+                // Icon(
+                //   this.icon == 'Clouds' || this.icon == 'Rain'
+                //       ? Icons.cloud
+                //       : Icons.sunny,
+                //   size: 32,
+                // ),
+                CustomIcon(this.icon),
                 SizedBox(
                   height: 8,
                 ),
-                Text(temprature)
+                Text("$temperature °C")
               ],
             ),
           ),

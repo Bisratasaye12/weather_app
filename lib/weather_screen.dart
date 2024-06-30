@@ -7,6 +7,7 @@ import 'package:weather_app/additional_info_item.dart';
 import 'package:weather_app/hourly_forcast_item.dart';
 import 'package:weather_app/secrets.dart';
 import 'package:weather_app/utils.dart';
+import 'package:geocoding/geocoding.dart';
 
 class WeatherScreen extends StatefulWidget {
   WeatherScreen({super.key});
@@ -16,11 +17,11 @@ class WeatherScreen extends StatefulWidget {
 }
 
 class _WeatherScreenState extends State<WeatherScreen> {
-  String CityName = "Addis Ababa";
   final kelvin_to_celsius = -272.15;
 
   Position? _currentPosition;
   Map<String, dynamic>? weatherData;
+  Placemark place = Placemark(); // Initialize with an empty Placemark
 
   @override
   void initState() {
@@ -58,8 +59,13 @@ class _WeatherScreenState extends State<WeatherScreen> {
     // When we reach here, permissions are granted and we can get the position of the device
     Position position = await Geolocator.getCurrentPosition(
         desiredAccuracy: LocationAccuracy.high);
+
+    List<Placemark> placemarks =
+        await placemarkFromCoordinates(position.latitude, position.longitude);
+
     setState(() {
       _currentPosition = position;
+      place = placemarks.isNotEmpty ? placemarks[0] : Placemark();
     });
   }
 
@@ -68,6 +74,12 @@ class _WeatherScreenState extends State<WeatherScreen> {
     if (_currentPosition != null) {
       await getCurrentWeather();
     }
+    place ??= Placemark(
+      name: "Unknown",
+      locality: "Unknown",
+      administrativeArea: "Unknown",
+      country: "Unknown",
+    );
   }
 
   Future<void> getCurrentWeather() async {
@@ -85,12 +97,13 @@ class _WeatherScreenState extends State<WeatherScreen> {
         weatherData = data;
       });
     } catch (e) {
-      print(e.toString());
+      print("Error occurred: $e");
     }
   }
 
   @override
   Widget build(BuildContext context) {
+    print(place.locality);
     return Scaffold(
       appBar: AppBar(
         title: const Text(
@@ -132,9 +145,8 @@ class _WeatherScreenState extends State<WeatherScreen> {
                         itemBuilder: (context, i) {
                           return HourlyForecast(
                             time: weatherData!['list'][i]['dt_txt'],
-                            temperature:
-                                weatherData!['list'][i]['main']['temp']
-                                    .toString(),
+                            temperature: weatherData!['list'][i]['main']['temp']
+                                .toString(),
                             icon: weatherData!['list'][i]['weather'][0]['icon'],
                           );
                         },
@@ -181,6 +193,7 @@ class _WeatherScreenState extends State<WeatherScreen> {
                         fontWeight: FontWeight.w700,
                       )),
                   SizedBox(height: 16),
+                  Text('${place.locality ?? 'Unknown'}'),
                   CustomIcon(currentIconId),
                   SizedBox(height: 16),
                   Text(
@@ -201,12 +214,9 @@ class _WeatherScreenState extends State<WeatherScreen> {
 
   Widget _buildAdditionalInfo() {
     final currentWeatherData = weatherData!['list'][0];
-    final currentPressure =
-        currentWeatherData["main"]['pressure'].toString();
-    final currentWindSpeed =
-        currentWeatherData['wind']['speed'].toString();
-    final currentHumidity =
-        currentWeatherData['main']['humidity'].toString();
+    final currentPressure = currentWeatherData["main"]['pressure'].toString();
+    final currentWindSpeed = currentWeatherData['wind']['speed'].toString();
+    final currentHumidity = currentWeatherData['main']['humidity'].toString();
 
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceAround,

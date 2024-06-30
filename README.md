@@ -61,9 +61,6 @@ A Flutter-based weather app that provides real-time weather information, hourly 
 - **OpenWeather**: For the weather API.
 - **Flutter**: For the amazing framework.
 
+Feel free to customize any sections to better fit your project!
 
 ## Screenshots
-
-4. **Add License**: Ensure the `LICENSE` file is included in the repository.
-
-Feel free to customize any sections to better fit your project!

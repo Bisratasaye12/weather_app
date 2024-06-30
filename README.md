@@ -1,8 +1,3 @@
-![photo_2024-06-30_18-02-50](https://github.com/Bisratasaye12/weather_app/assets/138536048/e276cca4-203e-4e32-8f18-147dc6e90d98)
-Here's a detailed and polished README for your weather app in Flutter, incorporating the screenshot you provided:
-
----
-
 # Weather App
 
 A Flutter-based weather app that provides real-time weather information, hourly forecasts, and additional weather details.
@@ -65,3 +60,4 @@ A Flutter-based weather app that provides real-time weather information, hourly 
 Feel free to customize any sections to better fit your project!
 
 ## Screenshots
+![photo_2024-06-30_18-02-50](https://github.com/Bisratasaye12/weather_app/assets/138536048/e276cca4-203e-4e32-8f18-147dc6e90d98)
